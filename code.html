@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM System Simulator</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .atm-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 350px; }
+        h2 { color: #333; margin-bottom: 20px; }
+        .screen { background: #222; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 15px; border-radius: 5px; min-height: 80px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; text-align: center; }
+        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        button { background: #007bff; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0056b3; }
+        .exit-btn { grid-column: span 2; background: #dc3545; }
+        .exit-btn:hover { background: #bd2130; }
+    </style>
+</head>
+<body>
+
+<div class="atm-container">
+    <h2>Automated Teller Machine</h2>
+    <div class="screen" id="atmScreen">Welcome to the ATM.<br>Please select an option.</div>
+    <div class="btn-grid">
+        <button onclick="checkBalance()">Check Balance</button>
+        <button onclick="deposit()">Deposit Money</button>
+        <button onclick="withdraw()">Withdraw Money</button>
+        <button onclick="transferFunds()">Fund Transfer</button>
+        <button onclick="exitATM()" class="exit-btn">Exit</button>
+    </div>
+</div>
+
+<script>
+    let balance = 5000;
+    const screen = document.getElementById('atmScreen');
+
+    function checkBalance() {
+        screen.innerHTML = `Current Balance:<br>$${balance}`;
+    }
+
+    function deposit() {
+        let amount = prompt("Enter deposit amount:");
+        if(amount && !isNaN(amount) && amount > 0) {
+            balance += parseFloat(amount);
+            screen.innerHTML = `Deposited: $${amount}<br>New Balance: $${balance}`;
+        } else {
+            screen.innerHTML = "Invalid Amount!";
+        }
+    }
+
+    function withdraw() {
+        let amount = prompt("Enter withdrawal amount:");
+        if(amount && !isNaN(amount) && amount > 0 && amount <= balance) {
+            balance -= parseFloat(amount);
+            screen.innerHTML = `Withdrew: $${amount}<br>Remaining: $${balance}`;
+        } else {
+            screen.innerHTML = "Insufficient Funds or Invalid Input!";
+        }
+    }
+
+    function transferFunds() {
+        let accountNum = prompt("Enter 10-digit recipient account number:");
+        if (!accountNum || isNaN(accountNum) || accountNum.trim().length < 4) {
+            screen.innerHTML = "Invalid Account Number!";
+            return;
+        }
+        
+        let amount = prompt(`Enter amount to transfer to A/C ...${accountNum.slice(-4)}:`);
+        if(amount && !isNaN(amount) && amount > 0 && amount <= balance) {
+            balance -= parseFloat(amount);
+            screen.innerHTML = `Transferred: $${amount}<br>To A/C: ...${accountNum.slice(-4)}<br>Remaining: $${balance}`;
+        } else {
+            screen.innerHTML = "Transfer Failed!<br>Insufficient funds or invalid input.";
+        }
+    }
+
+    function exitATM() {
+        screen.innerHTML = "Thank you for using<br>our ATM services!";
+    }
+</script>
+
+</body>
+</html>
